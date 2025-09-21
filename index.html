@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI가 밝힌 건강의 비밀: 잠, 식단, 운동</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-shadow { box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .pulse-animation { animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div id="app" class="min-h-screen">
+        
+        <div id="mainScreen" class="fade-in">
+            <div class="gradient-bg min-h-screen flex items-center justify-center p-4">
+                <div class="bg-white rounded-2xl p-8 max-w-4xl w-full card-shadow text-center">
+                    <div class="mb-8">
+                        <i class="fas fa-brain text-6xl text-blue-500 mb-4 pulse-animation"></i>
+                        <h1 class="text-4xl font-bold text-gray-800 mb-4">🧠 AI가 밝힌 건강의 비밀: 잠, 식단, 운동 🧠</h1>
+                        <p class="text-lg text-gray-600 mb-6">운동해도 살찌는 이유를 AI와 함께 파헤쳐봐요!</p>
+                    </div>
+
+                    <div class="mb-8">
+                        <h2 class="text-2xl font-semibold text-gray-800 mb-4">📺 먼저 영상을 시청해주세요</h2>
+                        <div class="relative w-full" style="padding-bottom: 56.25%; height: 0;">
+                            <iframe 
+                                src="https://www.youtube.com/embed/iQe-uBnt36g" 
+                                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                    </div>
+
+                    <div class="bg-yellow-100 border-l-4 border-yellow-500 p-4 mb-8 text-left">
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-exclamation-triangle text-yellow-600 mr-2"></i>
+                            <h3 class="text-lg font-semibold text-yellow-800">⚠️ 중요 안내</h3>
+                        </div>
+                        <p class="text-yellow-700 font-medium">강좌 이후에 출제되는 문제는 철저하게 영상강의 내용에 준해서 출제했습니다.</p>
+                    </div>
+
+                    <div class="mb-8">
+                        <label class="block text-lg font-semibold text-gray-700 mb-3">👤 이름을 입력해주세요</label>
+                        <input type="text" id="studentName" placeholder="이름을 입력하세요" 
+                               class="w-full max-w-md mx-auto px-4 py-3 text-lg border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+                    </div>
+
+                    <div class="grid md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-blue-100 p-6 rounded-lg">
+                            <i class="fas fa-book-open text-3xl text-blue-600 mb-3"></i>
+                            <h3 class="font-semibold text-blue-800">3개 단원</h3>
+                            <p class="text-blue-600">체계적인 학습</p>
+                        </div>
+                        <div class="bg-green-100 p-6 rounded-lg">
+                            <i class="fas fa-question-circle text-3xl text-green-600 mb-3"></i>
+                            <h3 class="font-semibold text-green-800">15개 문제</h3>
+                            <p class="text-green-600">재미있는 퀴즈</p>
+                        </div>
+                        <div class="bg-purple-100 p-6 rounded-lg">
+                            <i class="fas fa-gift text-3xl text-purple-600 mb-3"></i>
+                            <h3 class="font-semibold text-purple-800">80점 이상</h3>
+                            <p class="text-purple-600">특별 선물! 🎁</p>
+                        </div>
+                    </div>
+
+                    <button onclick="startCourse()" 
+                            class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-4 rounded-full text-xl font-semibold hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-300">
+                        🚀 강좌 시작하기 🚀
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="courseScreen" class="hidden min-h-screen bg-gray-50 py-8">
+            <div class="max-w-4xl mx-auto px-4">
+                
+                <div class="bg-white rounded-lg p-4 mb-6 card-shadow">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-sm font-medium text-gray-700">진행률</span>
+                        <span id="progressText" class="text-sm font-medium text-blue-600">1단원 / 3단원</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-3">
+                        <div id="progressBar" class="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full transition-all duration-500" style="width: 33%"></div>
+                    </div>
+                </div>
+
+                <div id="chapterContent" class="bg-white rounded-lg p-8 card-shadow fade-in">
+                    </div>
+
+                <div class="flex justify-between mt-6">
+                    <button id="prevBtn" onclick="previousStep()" class="hidden bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i>이전
+                    </button>
+                    <button id="nextBtn" onclick="nextStep()" class="ml-auto bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors">
+                        다음<i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="resultScreen" class="hidden min-h-screen gradient-bg flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl p-8 max-w-2xl w-full card-shadow text-center fade-in">
+                <div id="resultContent">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 전역 변수
+        let currentStep = 0;
+        let studentName = '';
+        let answers = [];
+        let chapterScores = [0, 0, 0];
+        
+        // 강좌 데이터
+        const courseData = {
+            chapters: [
+                {
+                    title: "1단원: 잠이 부족하면 살찌는 이유!",
+                    content: `
+                        <h2 class="text-3xl font-bold text-gray-800 mb-6 flex items-center">
+                            <i class="fas fa-moon text-indigo-500 mr-3"></i>1단원: 잠이 부족하면 살찌는 이유!
+                        </h2>
+                        <div class="space-y-6 text-left">
+                            <div class="bg-blue-50 p-6 rounded-lg">
+                                <h3 class="text-xl font-semibold text-blue-800 mb-3">😴 건강 관리의 1순위는 바로 '수면' [00:02:07]</h3>
+                                <p class="text-gray-700 leading-relaxed">
+                                    많은 사람들이 건강을 위해 운동을 먼저 생각하지만, 사실 가장 중요한 것은 충분한 잠이에요. [00:00:23]
+                                    잠이 부족하면 아무리 운동해도 효과가 없어요. [00:00:11] 건강이라는 집을 지을 때, 수면은 가장 단단한 기초 공사와 같아요. [00:02:19]
+                                </p>
+                            </div>
+                            
+                            <div class="bg-red-50 p-6 rounded-lg">
+                                <h3 class="text-xl font-semibold text-red-800 mb-3">😡 스트레스 호르몬 '코티솔'의 비밀 [00:01:32]</h3>
+                                <p class="text-gray-700 leading-relaxed">
+                                    잠을 잘 못 자면 우리 몸은 스트레스 호르몬인 '코티솔'을 많이 만들어요. [00:01:32]
+                                    코티솔은 근육을 녹여 에너지를 쓰고, 먹은 음식을 뱃살이나 내장지방으로 저장하라고 명령해요. [00:01:46]
+                                    그래서 잠을 못 자고 하는 운동은 오히려 소중한 근육을 줄이고 지방을 쌓는 일이 될 수 있답니다. [00:01:57]
+                                </p>
+                            </div>
+                            
+                            <div class="bg-yellow-50 p-6 rounded-lg">
+                                <h3 class="text-xl font-semibold text-yellow-800 mb-3">📊 AI가 밝힌 충격적인 사례 [00:01:01]</h3>
+                                <p class="text-gray-700 leading-relaxed">
+                                    AI 분석 결과, 한 전문가는 1년 동안 야간 근무를 하며 꾸준히 운동했지만, 
+                                    결과는 근육 4kg 손실, 내장 지방 8kg 증가였어요. [00:01:11]
+                                    이 모든 원인은 바로 '수면 부족' 때문이었습니다. [00:01:32]
+                                </p>
+                            </div>
+                        </div>
+                    `,
+                    questions: [
+                        {
+                            question: "건강 관리의 최우선 순위는 무엇이라고 했나요?",
+                            options: ["운동", "수면", "식단", "친구 만나기"],
+                            correct: 1
+                        },
+                        {
+                            question: "잠을 잘 못 자면 우리 몸에서 많이 나오는 스트레스 호르몬의 이름은 무엇인가요?",
+                            options: ["아드레날린", "코티솔", "세로토닌", "도파민"],
+                            correct: 1
+                        },
+                        {
+                            question: "코티솔 호르몬이 하는 일은 무엇인가요?",
+                            options: ["근육을 늘린다", "지방을 태운다", "근육을 녹이고 지방을 저장한다", "기분을 좋게 한다"],
+                            correct: 2
+                        },
+                        {
+                            question: "영상에서 AI가 분석한 사례의 전문가는 무엇이 부족했나요?",
+                            options: ["운동량", "물", "수면", "야채"],
+                            correct: 2
+                        },
+                        {
+                            question: "건강을 '집'에 비유할 때, '기초 공사'에 해당하는 것은 무엇인가요?",
+                            options: ["운동", "식단", "수면", "청소"],
+                            correct: 2
+                        }
+                    ]
+                },
+                {
+                    title: "2단원: 운동보다 중요한 식단 관리!",
+                    content: `
+                        <h2 class="text-3xl font-bold text-gray-800 mb-6 flex items-center">
+                            <i class="fas fa-utensils text-green-500 mr-3"></i>2단원: 운동보다 중요한 식단 관리!
+                        </h2>
+                        <div class="space-y-6 text-left">
+                            <div class="bg-purple-50 p-6 rounded-lg">
+                                <h3 class="text-xl font-semibold text-purple-800 mb-3">🥤 조심해야 할 '액체 탄수화물' [00:02:49]</h3>
+                                <p class="text-gray-700 leading-relaxed">
+                                    건강 음료처럼 보이는 과일 주스, 스무디, 제로 칼로리 음료 등은 사실 '액체 탄수화물'이에요. [00:02:50]
+                                    이런 음료들은 섬유질이 없어 당분이 몸에 너무 빨리 흡수되어 혈당을 확 높였다가 떨어뜨려요. [00:03:02]
+                                    결국 지방간과 염증을 유발해 건강을 망가뜨리는 주범이 될 수 있답니다. [00:03:10]
+                                </p>
+                            </div>
+                            
+                            <div class="bg-pink-50 p-6 rounded-lg">
+                                <h3 class="text-xl font-semibold text-pink-800 mb-3">🍎 자연 그대로의 음식으로 건강하게 [00:03:21]</h3>
+                                <p class="text-gray-700 leading-relaxed">
+                                    단 것이 당길 때는 자연 그대로의 음식을 먹는 것이 좋아요. [00:03:21]
+                                    예를 들어, 흰쌀밥에 통곡물을 섞어 먹거나, 과자 대신 껍질째 먹는 사과나 견과류를 간식으로 먹는 거죠. [00:03:29]
+                                    이것은 억지로 참는 다이어트가 아니라, 내 몸에 좋은 음식을 선택하고 즐기는 지속 가능한 방법이에요. [00:03:39]
+                                </p>
+                            </div>
+                            
+                            <div class="bg-indigo-50 p-6 rounded-lg">
+                                <h3 class="text-xl font-semibold text-indigo-800 mb-3">🤝 잠 못 자면 식단도 무너져요 [00:02:30]</h3>
+                                <p class="text-gray-700 leading-relaxed">
+                                    잠을 잘 못 자면 식단 관리도 어려워져요. [00:02:30]
+                                    피곤하면 나도 모르게 달고 짜고 자극적인 음식을 찾게 되거든요. [00:02:40]
+                                    그래서 수면으로 튼튼한 기초를 다지고 나서, 좋은 식단으로 에너지를 채우는 것이 중요해요. [00:03:49]
+                                </p>
+                            </div>
+                        </div>
+                    `,
+                    questions: [
+                        {
+                            question: "건강에 해로울 수 있는 '액체 탄수화물'의 예시가 아닌 것은?",
+                            options: ["과일 주스", "스무디", "제로 칼로리 음료", "껍질째 먹는 사과"],
+                            correct: 3
+                        },
+                        {
+                            question: "액체 탄수화물이 몸에 빨리 흡수될 때 어떤 영향을 주나요?",
+                            options: ["혈당을 완만하게 유지한다", "혈당을 요동치게 만든다", "근육을 키운다", "피부를 좋게 한다"],
+                            correct: 1
+                        },
+                        {
+                            question: "단 것이 당길 때 대안으로 제시된 음식은 무엇인가요?",
+                            options: ["사탕", "초콜릿", "껍질째 먹는 사과나 견과류", "탄산음료"],
+                            correct: 2
+                        },
+                        {
+                            question: "잠을 잘 못 자면 어떤 음식을 찾기 쉬워지나요?",
+                            options: ["싱겁고 건강한 음식", "달고 짜고 자극적인 음식", "단백질이 많은 음식", "물을 많이 마신다"],
+                            correct: 1
+                        },
+                        {
+                            question: "식단 관리에서 중요한 것은 무엇을 참고 제안하는 고통스러운 다이어트가 아니라고 했나요?",
+                            options: ["운동량", "수면 시간", "지속 가능한 방식", "친구들과의 약속"],
+                            correct: 2
+                        }
+                    ]
+                },
+                {
+                    title: "3단원: 똑똑하게 운동하기!",
+                    content: `
+                        <h2 class="text-3xl font-bold text-gray-800 mb-6 flex items-center">
+                            <i class="fas fa-running text-teal-500 mr-3"></i>3단원: 똑똑하게 운동하기!
+                        </h2>
+                        <div class="space-y-6 text-left">
+                            <div class="bg-blue-50 p-6 rounded-lg">
+                                <h3 class="text-xl font-semibold text-blue-800 mb-3">🏃‍♀️ 다면적 운동법으로 건강하게 [00:04:15]</h3>
+                                <p class="text-gray-700 leading-relaxed">
+                                    진짜 건강한 운동은 달리기 같은 유산소 운동만 하는 것이 아니에요. [00:04:05]
+                                    **다면적 운동법**은 심폐지구력을 위한 유산소, 근육을 지키는 근력 운동, 관절을 부드럽게 하는 유연성 운동, 
+                                    그리고 신체 조절 능력을 키우는 균형 감각 운동까지 모두 함께 조화를 이루어야 합니다. [00:04:17]
+                                </p>
+                            </div>
+                            
+                            <div class="bg-green-50 p-6 rounded-lg">
+                                <h3 class="text-xl font-semibold text-green-800 mb-3">💪 약한 부분에 더 투자하세요 [00:04:35]</h3>
+                                <p class="text-gray-700 leading-relaxed">
+                                    내가 좀 약하고 하기 싫은 운동에 시간을 조금 더 투자하는 것이 좋아요. [00:04:35]
+                                    그래야 몸 전체의 균형이 잡히고 건강해질 수 있답니다.
+                                </p>
+                            </div>
+                            
+                            <div class="bg-yellow-50 p-6 rounded-lg">
+                                <h3 class="text-xl font-semibold text-yellow-800 mb-3">💖 즐거운 루틴으로 건강 관리 [00:04:38]</h3>
+                                <p class="text-gray-700 leading-relaxed">
+                                    건강 관리는 무언가를 참고 힘들게 하는 것이 아니라, 
+                                    **지속 가능한 즐거움의 루틴**을 찾아가는 여정이에요. [00:04:38]
+                                    수면으로 기초를 튼튼히 하고, 좋은 식단으로 에너지를 채운 후에야 
+                                    비로소 운동의 효과를 온전히 누릴 수 있어요. [00:03:49]
+                                </p>
+                            </div>
+                        </div>
+                    `,
+                    questions: [
+                        {
+                            question: "진짜 건강한 운동은 어떤 운동이라고 했나요?",
+                            options: ["유산소 운동만 하는 것", "근력 운동만 하는 것", "다면적 운동법", "하루 종일 하는 운동"],
+                            correct: 2
+                        },
+                        {
+                            question: "다면적 운동법에 포함되지 않는 것은 무엇인가요?",
+                            options: ["유산소 운동", "근력 운동", "유연성 운동", "음악 감상"],
+                            correct: 3
+                        },
+                        {
+                            question: "운동할 때 어디에 시간을 더 투자하라고 했나요?",
+                            options: ["좋아하는 운동", "하기 싫은 운동", "쉬운 운동", "매일 하는 운동"],
+                            correct: 1
+                        },
+                        {
+                            question: "건강 관리는 '참는 습관'이 아니라 무엇이라고 했나요?",
+                            options: ["지루한 숙제", "고통스러운 시간", "지속 가능한 즐거움의 루틴", "힘든 노동"],
+                            correct: 2
+                        },
+                        {
+                            question: "운동의 효과를 온전히 누릴 수 있는 순서는?",
+                            options: ["운동 - 식단 - 수면", "식단 - 수면 - 운동", "수면 - 식단 - 운동", "운동 - 수면 - 식단"],
+                            correct: 2
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // 강좌 시작
+        function startCourse() {
+            const name = document.getElementById('studentName').value.trim();
+            if (!name) {
+                alert('이름을 입력해주세요!');
+                return;
+            }
+            
+            studentName = name;
+            document.getElementById('mainScreen').classList.add('hidden');
+            document.getElementById('courseScreen').classList.remove('hidden');
+            
+            showCurrentStep();
+        }
+
+        // 현재 단계 표시
+        function showCurrentStep() {
+            const chapterIndex = Math.floor(currentStep / 6);
+            const stepInChapter = currentStep % 6;
+            
+            updateProgress();
+            
+            if (stepInChapter === 0) {
+                // 단원 학습 내용 표시
+                showChapterContent(chapterIndex);
+            } else {
+                // 문제 표시
+                showQuestion(chapterIndex, stepInChapter - 1);
+            }
+            
+            updateNavigationButtons();
+        }
+
+        // 단원 내용 표시
+        function showChapterContent(chapterIndex) {
+            const chapter = courseData.chapters[chapterIndex];
+            document.getElementById('chapterContent').innerHTML = chapter.content;
+        }
+
+        // 문제 표시
+        function showQuestion(chapterIndex, questionIndex) {
+            const question = courseData.chapters[chapterIndex].questions[questionIndex];
+            const globalQuestionIndex = chapterIndex * 5 + questionIndex;
+            
+            const content = `
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                    📝 문제 ${globalQuestionIndex + 1}번
+                </h2>
+                <div class="bg-blue-50 p-6 rounded-lg mb-6">
+                    <h3 class="text-xl font-semibold text-blue-800 mb-4">${question.question}</h3>
+                    <div class="space-y-3">
+                        ${question.options.map((option, index) => `
+                            <label class="flex items-center p-3 bg-white rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                                <input type="radio" name="question${globalQuestionIndex}" value="${index}" 
+                                       onchange="saveAnswer(${globalQuestionIndex}, ${index})"
+                                       ${answers[globalQuestionIndex] === index ? 'checked' : ''}
+                                       class="mr-3 text-blue-600">
+                                <span class="text-lg">${index + 1}. ${option}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('chapterContent').innerHTML = content;
+        }
+
+        // 답안 저장
+        function saveAnswer(questionIndex, answerIndex) {
+            answers[questionIndex] = answerIndex;
+        }
+
+        // 진행률 업데이트
+        function updateProgress() {
+            const totalSteps = 18; // 3단원 × (1내용 + 5문제) = 18
+            const progress = ((currentStep + 1) / totalSteps) * 100;
+            
+            document.getElementById('progressBar').style.width = progress + '%';
+            
+            const chapterIndex = Math.floor(currentStep / 6) + 1;
+            document.getElementById('progressText').textContent = `${chapterIndex}단원 / 3단원`;
+        }
+
+        // 네비게이션 버튼 업데이트
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            if (currentStep === 0) {
+                prevBtn.classList.add('hidden');
+            } else {
+                prevBtn.classList.remove('hidden');
+            }
+            
+            if (currentStep >= 17) {
+                nextBtn.textContent = '결과 확인';
+                nextBtn.innerHTML = '<i class="fas fa-check mr-2"></i>결과 확인';
+            } else {
+                nextBtn.innerHTML = '다음<i class="fas fa-arrow-right ml-2"></i>';
+            }
+        }
+
+        // 다음 단계
+        function nextStep() {
+            if (currentStep >= 17) {
+                showResult();
+                return;
+            }
+            
+            // 문제 단계에서 답안 확인
+            if (currentStep % 6 !== 0 && currentStep % 6 <= 5) {
+                const globalQuestionIndex = Math.floor(currentStep / 6) * 5 + (currentStep % 6 - 1);
+                if (answers[globalQuestionIndex] === undefined) {
+                    alert('답을 선택해주세요!');
+                    return;
+                }
+            }
+            
+            currentStep++;
+            showCurrentStep();
+        }
+
+        // 이전 단계
+        function previousStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                showCurrentStep();
+            }
+        }
+
+        // 결과 표시
+        function showResult() {
+            // 점수 계산
+            let totalCorrect = 0;
+            
+            for (let chapterIndex = 0; chapterIndex < 3; chapterIndex++) {
+                let chapterCorrect = 0;
+                const questions = courseData.chapters[chapterIndex].questions;
+                
+                for (let questionIndex = 0; questionIndex < 5; questionIndex++) {
+                    const globalIndex = chapterIndex * 5 + questionIndex;
+                    if (answers[globalIndex] === questions[questionIndex].correct) {
+                        chapterCorrect++;
+                        totalCorrect++;
+                    }
+                }
+                
+                chapterScores[chapterIndex] = (chapterCorrect / 5) * 100;
+            }
+            
+            const totalScore = Math.round((totalCorrect / 15) * 100);
+            const isPass = totalScore >= 80;
+            
+            // 결과 데이터 저장 (실제 구현에서는 서버로 전송)
+            const resultData = {
+                name: studentName,
+                scores: chapterScores,
+                totalScore: totalScore,
+                timestamp: new Date().toLocaleString(),
+                answers: answers
+            };
+            
+            // 로컬 스토리지에 저장 (관리자가 확인할 수 있도록)
+            let results = JSON.parse(localStorage.getItem('courseResults') || '[]');
+            results.push(resultData);
+            localStorage.setItem('courseResults', JSON.stringify(results));
+            
+            // 결과 화면 표시
+            const resultHTML = `
+                <div class="text-center">
+                    ${isPass ? 
+                        '<i class="fas fa-trophy text-6xl text-yellow-500 mb-4 pulse-animation"></i>' :
+                        '<i class="fas fa-medal text-6xl text-gray-400 mb-4"></i>'
+                    }
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">${studentName}님의 결과</h2>
+                    
+                    <div class="bg-gray-100 p-6 rounded-lg mb-6">
+                        <div class="text-4xl font-bold ${isPass ? 'text-green-600' : 'text-orange-600'} mb-2">
+                            ${totalScore}점
+                        </div>
+                        <div class="text-lg text-gray-600">총 15문제 중 ${totalCorrect}문제 정답</div>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-4 mb-6">
+                        ${chapterScores.map((score, index) => `
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <div class="text-sm text-blue-600 font-medium">${index + 1}단원</div>
+                                <div class="text-xl font-bold text-blue-800">${Math.round(score)}점</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    ${isPass ? `
+                        <div class="bg-green-100 border-2 border-green-300 p-6 rounded-lg mb-6">
+                            <i class="fas fa-gift text-3xl text-green-600 mb-3"></i>
+                            <h3 class="text-xl font-bold text-green-800 mb-2">축하합니다! 🎉</h3>
+                            <p class="text-green-700">80점 이상을 달성하여 특별 선물을 받을 자격이 있습니다!</p>
+                            <p class="text-sm text-green-600 mt-2">관리자가 곧 연락드릴 예정입니다.</p>
+                        </div>
+                    ` : `
+                        <div class="bg-orange-100 border-2 border-orange-300 p-6 rounded-lg mb-6">
+                            <i class="fas fa-redo text-2xl text-orange-600 mb-3"></i>
+                            <h3 class="text-lg font-bold text-orange-800 mb-2">아쉽네요!</h3>
+                            <p class="text-orange-700">80점 이상을 위해 다시 도전해보세요!</p>
+                        </div>
+                    `}
+                    
+                    <button onclick="restartCourse()" 
+                            class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors mr-4">
+                        <i class="fas fa-redo mr-2"></i>다시 도전
+                    </button>
+                    <button onclick="goHome()" 
+                            class="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition-colors">
+                        <i class="fas fa-home mr-2"></i>처음으로
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('resultContent').innerHTML = resultHTML;
+            document.getElementById('courseScreen').classList.add('hidden');
+            document.getElementById('resultScreen').classList.remove('hidden');
+        }
+
+        // 강좌 재시작
+        function restartCourse() {
+            currentStep = 0;
+            answers = [];
+            chapterScores = [0, 0, 0];
+            
+            document.getElementById('resultScreen').classList.add('hidden');
+            document.getElementById('courseScreen').classList.remove('hidden');
+            
+            showCurrentStep();
+        }
+
+        // 홈으로 돌아가기
+        function goHome() {
+            currentStep = 0;
+            answers = [];
+            chapterScores = [0, 0, 0];
+            studentName = '';
+            document.getElementById('studentName').value = '';
+            
+            document.getElementById('resultScreen').classList.add('hidden');
+            document.getElementById('mainScreen').classList.remove('hidden');
+        }
+
+        // 관리자용 결과 확인 함수 (개발자 도구에서 사용)
+        function getResults() {
+            return JSON.parse(localStorage.getItem('courseResults') || '[]');
+        }
+
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('AI가 밝힌 건강의 비밀: 잠, 식단, 운동 강좌가 시작되었습니다!');
+            console.log('관리자님께서 결과를 확인하시려면 개발자 도구에서 getResults() 함수를 실행하세요.');
+        });
+    </script>
+</body>
+</html>
